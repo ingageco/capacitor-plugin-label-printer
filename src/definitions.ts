@@ -1,3 +1,3 @@
 export interface CapacitorPluginLabelPrinterPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  getLabelPrinters(): Promise<{ selectedPrinter: { name: string; url: string; make: string } }>;
 }

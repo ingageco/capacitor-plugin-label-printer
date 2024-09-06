@@ -1,15 +1,9 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { CapacitorPluginLabelPrinterPlugin } from './definitions';
+export interface CapacitorPluginLabelPrinterPlugin {
+  getLabelPrinters(): Promise<{ selectedPrinter: { name: string; url: string; make: string } }>;
+}
 
-const CapacitorPluginLabelPrinter =
-  registerPlugin<CapacitorPluginLabelPrinterPlugin>(
-    'CapacitorPluginLabelPrinter',
-    {
-      web: () =>
-        import('./web').then(m => new m.CapacitorPluginLabelPrinterWeb()),
-    },
-  );
+const CapacitorPluginLabelPrinter = registerPlugin<CapacitorPluginLabelPrinterPlugin>('CapacitorPluginLabelPrinter');
 
-export * from './definitions';
 export { CapacitorPluginLabelPrinter };
