@@ -14,7 +14,6 @@ npx cap sync
 <docgen-index>
 
 * [`getLabelPrinters()`](#getlabelprinters)
-* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -24,30 +23,12 @@ npx cap sync
 ### getLabelPrinters()
 
 ```typescript
-getLabelPrinters() => Promise<{ selectedPrinter: LabelPrinter; }>
+getLabelPrinters() => Promise<{ selectedPrinter: { name: string; url: string; make: string; }; }>
 ```
 
-
-Opens a native iOS printer picker dialog filtered for Dymo and Brother label printers.
-
-**Returns:** <code>Promise&lt;{ selectedPrinter: <a href="#labelprinter">LabelPrinter</a>; }&gt;</code>
-
-**Since:** 1.0.0
+**Returns:** <code>Promise&lt;{ selectedPrinter: { name: string; url: string; make: string; }; }&gt;</code>
 
 --------------------
-
-
-### Interfaces
-
-
-#### LabelPrinter
-
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`name`**   | <code>string</code> |
-| **`url`**    | <code>string</code> |
-| **`make`**   | <code>string</code> |
-
 
 </docgen-api>
 

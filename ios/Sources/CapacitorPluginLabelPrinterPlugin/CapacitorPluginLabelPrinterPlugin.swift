@@ -4,7 +4,6 @@ import UIKit
 
 @objc(CapacitorPluginLabelPrinterPlugin)
 public class CapacitorPluginLabelPrinterPlugin: CAPPlugin {
-    private let implementation = CapacitorPluginLabelPrinter()
     
     @objc func getLabelPrinters(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
