@@ -14,6 +14,9 @@ npx cap sync
 <docgen-index>
 
 * [`getLabelPrinters()`](#getlabelprinters)
+* [`printToBrotherPrinter(...)`](#printtobrotherprinter)
+* [`getPrinterInfo(...)`](#getprinterinfo)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -29,6 +32,63 @@ getLabelPrinters() => Promise<{ selectedPrinter: { name: string; url: string; ma
 **Returns:** <code>Promise&lt;{ selectedPrinter: { name: string; url: string; make: string; }; }&gt;</code>
 
 --------------------
+
+
+### printToBrotherPrinter(...)
+
+```typescript
+printToBrotherPrinter(options: { printerURL: string; imageSource: string; labelSize: string; }) => Promise<{ success: boolean; }>
+```
+
+| Param         | Type                                                                         |
+| ------------- | ---------------------------------------------------------------------------- |
+| **`options`** | <code>{ printerURL: string; imageSource: string; labelSize: string; }</code> |
+
+**Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
+
+--------------------
+
+
+### getPrinterInfo(...)
+
+```typescript
+getPrinterInfo(options: { printerURL: string; }) => Promise<PrinterInfo>
+```
+
+| Param         | Type                                 |
+| ------------- | ------------------------------------ |
+| **`options`** | <code>{ printerURL: string; }</code> |
+
+**Returns:** <code>Promise&lt;<a href="#printerinfo">PrinterInfo</a>&gt;</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### PrinterInfo
+
+| Prop                      | Type                     |
+| ------------------------- | ------------------------ |
+| **`name`**                | <code>string</code>      |
+| **`url`**                 | <code>string</code>      |
+| **`make`**                | <code>string</code>      |
+| **`supportedPaperSizes`** | <code>PaperSize[]</code> |
+| **`supportsColor`**       | <code>boolean</code>     |
+| **`supportsDuplex`**      | <code>boolean</code>     |
+
+
+#### PaperSize
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`width`**        | <code>number</code> |
+| **`height`**       | <code>number</code> |
+| **`topMargin`**    | <code>number</code> |
+| **`leftMargin`**   | <code>number</code> |
+| **`bottomMargin`** | <code>number</code> |
+| **`rightMargin`**  | <code>number</code> |
 
 </docgen-api>
 

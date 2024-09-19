@@ -17,6 +17,14 @@
       will be published to npm when using this template, so you can create away!
     </p>
     <button onclick="selectLabelPrinter()">Select a Label Printer</button>
+    <button onclick="getPrinterInfo(selectedPrinter?.url)">Get Printer Info</button>
+    <button onclick="printToBrotherPrinter({
+        printerURL: selectedPrinter?.url, 
+        imageSource: 'https://delivery.churchlabcdn.com/test-label.png', 
+        labelSize: '29x62mm',
+        rotate: true
+        })">Print
+      to Brother Printer</button>
   </main>
 
   <script src="./js/example.js" type="module"></script>

@@ -1,9 +1,6 @@
 import { registerPlugin } from '@capacitor/core';
-
-export interface CapacitorPluginLabelPrinterPlugin {
-  getLabelPrinters(): Promise<{ selectedPrinter: { name: string; url: string; make: string } }>;
-}
+import type { CapacitorPluginLabelPrinterPlugin, PrinterInfo, PaperSize } from './definitions';
 
 const CapacitorPluginLabelPrinter = registerPlugin<CapacitorPluginLabelPrinterPlugin>('CapacitorPluginLabelPrinter');
 
-export { CapacitorPluginLabelPrinter };
+export { CapacitorPluginLabelPrinter, PrinterInfo, PaperSize };

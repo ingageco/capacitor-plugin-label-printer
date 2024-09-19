@@ -17,12 +17,14 @@ let package = Package(
             name: "CapacitorPluginLabelPrinterPlugin",
             dependencies: [
                 .product(name: "Capacitor", package: "capacitor-swift-pm"),
-                .product(name: "Cordova", package: "capacitor-swift-pm")
+                .product(name: "Cordova", package: "capacitor-swift-pm"),
+                "BRLMPrinterKit",
             ],
-            path: "ios/Sources/CapacitorPluginLabelPrinterPlugin"),
+            path: "ios/Sources/CapacitorPluginLabelPrinterPlugin"
+        ),
         .testTarget(
             name: "CapacitorPluginLabelPrinterPluginTests",
             dependencies: ["CapacitorPluginLabelPrinterPlugin"],
-            path: "ios/Tests/CapacitorPluginLabelPrinterPluginTests")
+            path: "ios/Tests/CapacitorPluginLabelPrinterPluginTests"),
     ]
 )
