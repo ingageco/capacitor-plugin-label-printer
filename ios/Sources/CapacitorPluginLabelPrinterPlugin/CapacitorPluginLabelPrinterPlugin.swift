@@ -2,6 +2,8 @@ import Foundation
 import Capacitor
 import UIKit
 
+import BRLMPrinterKit
+
 @objc(CapacitorPluginLabelPrinterPlugin)
 public class CapacitorPluginLabelPrinterPlugin: CAPPlugin {
     
