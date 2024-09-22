@@ -97,5 +97,21 @@ public class CapacitorPluginLabelPrinterPlugin: CAPPlugin {
         call.resolve()
     }
     
+    @objc func getPrinterStatus(_ call: CAPPluginCall) {
+        guard let ipAddress = call.getString("ipAddress") else {
+            call.reject("Missing IP address")
+            return
+        }
+
+        let printerInfo = WiFiPrinterInfo()
+        printerInfo.ipv4Address = ipAddress
+
+        PrinterInfoFacade().fetchStatus(printerInfo: printerInfo) { statusString in
+            DispatchQueue.main.async {
+                call.resolve(["status": statusString])
+            }
+        }
+    }
+    
     
 }

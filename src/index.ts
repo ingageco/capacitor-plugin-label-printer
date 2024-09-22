@@ -9,11 +9,9 @@ export interface CapacitorPluginLabelPrinterPlugin {
     }>
   }>;
   cancelPrinterSearch(): Promise<void>;
-  printLabel(options: {
-    ipAddress: string,
-    imageUrl: string
-  }): Promise<{ success: boolean }>;
+  printLabel(ipAddress: string, imageUrl: string): Promise<{ success: boolean }>;
   cancelPrinting(): Promise<void>;
+  getPrinterStatus(ipAddress: string): Promise<{ status: string }>;
 }
 
 const CapacitorPluginLabelPrinter = registerPlugin<CapacitorPluginLabelPrinterPlugin>('CapacitorPluginLabelPrinter');

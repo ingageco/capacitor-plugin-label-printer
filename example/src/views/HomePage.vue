@@ -28,7 +28,13 @@
           <p><strong>Model Name:</strong> {{ selectedPrinter.modelName }}</p>
           <p><strong>IP Address:</strong> {{ selectedPrinter.ipAddress }}</p>
         </div>
+        <ion-button @click="getPrinterStatus(selectedPrinter)">Get Printer Status</ion-button>
         <ion-button @click="printLabel(selectedPrinter)">Print Label</ion-button>
+
+        <div v-if="selectedPrinterStatus">
+          <h3>Printer Status:</h3>
+          <pre><code>{{ JSON.stringify(selectedPrinterStatus, null, 2) }}</code></pre>
+        </div>
       </div>
 
     </ion-content>
@@ -43,6 +49,9 @@ import { onMounted, ref } from 'vue';
 
 const printerList = ref([]);
 const selectedPrinter = ref(null);
+const selectedPrinterStatus = ref(null);
+
+
 onMounted(async () => {
   await getBrotherPrinters();
 });
@@ -63,6 +72,18 @@ const getBrotherPrinters = async () => {
   }
 };
 
+const getPrinterStatus = async (printer) => {
+  try {
+    const result = await CapacitorPluginLabelPrinter.getPrinterStatus({
+      ipAddress: printer.ipAddress
+    });
+    selectedPrinterStatus.value = result.status;
+    console.log('Printer Status:', result.status);
+  } catch (error) {
+    console.error('Error getting printer status:', error);
+  }
+};
+
 const printLabel = async (printer) => {
   console.log('Print Label clicked');
   try {
@@ -77,3 +98,18 @@ const printLabel = async (printer) => {
 };
 
 </script>
+
+<style scoped>
+pre {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+code {
+  font-family: monospace;
+}
+</style>

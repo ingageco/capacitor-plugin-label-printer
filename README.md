@@ -17,6 +17,7 @@ npx cap sync
 * [`cancelPrinterSearch()`](#cancelprintersearch)
 * [`printLabel(...)`](#printlabel)
 * [`cancelPrinting()`](#cancelprinting)
+* [`getPrinterStatus(...)`](#getprinterstatus)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -47,12 +48,13 @@ cancelPrinterSearch() => Promise<void>
 ### printLabel(...)
 
 ```typescript
-printLabel(options: { ipAddress: string; imageUrl: string; }) => Promise<{ success: boolean; }>
+printLabel(ipAddress: string, imageUrl: string) => Promise<{ success: boolean; }>
 ```
 
-| Param         | Type                                                  |
-| ------------- | ----------------------------------------------------- |
-| **`options`** | <code>{ ipAddress: string; imageUrl: string; }</code> |
+| Param           | Type                |
+| --------------- | ------------------- |
+| **`ipAddress`** | <code>string</code> |
+| **`imageUrl`**  | <code>string</code> |
 
 **Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
 
@@ -64,6 +66,21 @@ printLabel(options: { ipAddress: string; imageUrl: string; }) => Promise<{ succe
 ```typescript
 cancelPrinting() => Promise<void>
 ```
+
+--------------------
+
+
+### getPrinterStatus(...)
+
+```typescript
+getPrinterStatus(ipAddress: string) => Promise<{ status: string; }>
+```
+
+| Param           | Type                |
+| --------------- | ------------------- |
+| **`ipAddress`** | <code>string</code> |
+
+**Returns:** <code>Promise&lt;{ status: string; }&gt;</code>
 
 --------------------
 
