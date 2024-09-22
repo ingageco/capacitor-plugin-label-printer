@@ -71,7 +71,10 @@
   },
   "capacitor": {
     "ios": {
-      "src": "ios"
+      "src": "ios",
+      "frameworks": [
+        "BRLMPrinterKit.xcframework"
+      ]
     },
     "android": {
       "src": "android"
