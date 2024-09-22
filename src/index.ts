@@ -5,11 +5,15 @@ export interface CapacitorPluginLabelPrinterPlugin {
     printers: Array<{
       modelName: string;
       ipAddress: string;
+      printerModel: string;
     }>
   }>;
-  getPrinters(): Promise<{ selectedPrinter: { name: string; url: string; make: string, ipAddress: string } }>;
-  printLabel(options: { ipAddress: string, modelName: string, text: string }): Promise<{ success: boolean }>;
-
+  cancelPrinterSearch(): Promise<void>;
+  printLabel(options: {
+    ipAddress: string,
+    imageUrl: string
+  }): Promise<{ success: boolean }>;
+  cancelPrinting(): Promise<void>;
 }
 
 const CapacitorPluginLabelPrinter = registerPlugin<CapacitorPluginLabelPrinterPlugin>('CapacitorPluginLabelPrinter');

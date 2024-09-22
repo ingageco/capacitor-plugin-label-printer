@@ -1,0 +1,7 @@
+{
+  "name": "brother test",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

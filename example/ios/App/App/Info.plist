@@ -53,5 +53,10 @@
 		<string>_pdl-datastream._tcp</string>
 		<string>_ipp._tcp</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+</dict>
 </dict>
 </plist>

@@ -37,23 +37,65 @@ class PrintImageFacade {
 
     // print image with URL
     func printImageWithURL(info: IPrinterInfo, url: URL?, settings: BRLMPrintSettingsProtocol?) -> String {
+        print("Received URL: \(url?.absoluteString ?? "nil")")
+        
         guard let channel = PrinterConnectUtil().fetchCurrentChannel(printerInfo: info) else {
             return NSLocalizedString("create_channel_error", comment: "")
         }
-        guard let printSettings = settings, let url = url else {
-            return NSLocalizedString("no_print_data", comment: "")
+        
+        guard let printSettings = settings else {
+            return NSLocalizedString("no_print_settings", comment: "")
         }
+        
+        guard let url = url else {
+            return NSLocalizedString("no_image_url", comment: "")
+        }
+        
         let generateResult = BRLMPrinterDriverGenerator.open(channel)
         if generateResult.error.code != BRLMOpenChannelErrorCode.noError {
             return OpenChannelErrorModel.fetchChannelErrorCode(error: generateResult.error.code)
         }
+        
         let driver = generateResult.driver
         cancelRoutine = {
             driver?.cancelPrinting()
         }
-        let printError = driver?.printImage(with: url, settings: printSettings)
+        
+        print("Attempting to print image from URL: \(url.absoluteString)")
+        
+        let imageData: Data
+        do {
+            if url.isFileURL {
+                // It's a local file
+                imageData = try Data(contentsOf: url)
+                print("Successfully read local file data")
+            } else {
+                // It's a remote URL
+                imageData = try Data(contentsOf: url)
+                print("Successfully downloaded remote image data")
+            }
+        } catch {
+            print("Error reading/downloading image data: \(error.localizedDescription)")
+            return NSLocalizedString("failed_to_read_image_data", comment: "")
+        }
+        
+        // Create a UIImage from the data
+        guard let image = UIImage(data: imageData) else {
+            print("Failed to create UIImage from data")
+            return NSLocalizedString("failed_to_create_image", comment: "")
+        }
+        
+        print("Successfully created UIImage")
+        
+        // Print the image
+        let printError = driver?.printImage(with: image.cgImage!, settings: printSettings)
         driver?.closeChannel()
         cancelRoutine = nil
+        
+        if let error = printError {
+            print("Print Error: \(error.code), \(error.allLogs)")
+        }
+        
         return PrintErrorModel.fetchPrintErrorCode(error: printError?.code) + "\n\n" +
         (printError?.allLogs.map({ $0.errorDescription }).joined(separator: "\n") ?? "")
     }

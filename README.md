@@ -14,8 +14,9 @@ npx cap sync
 <docgen-index>
 
 * [`getBrotherPrinters()`](#getbrotherprinters)
-* [`getPrinters()`](#getprinters)
+* [`cancelPrinterSearch()`](#cancelprintersearch)
 * [`printLabel(...)`](#printlabel)
+* [`cancelPrinting()`](#cancelprinting)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -26,21 +27,19 @@ npx cap sync
 ### getBrotherPrinters()
 
 ```typescript
-getBrotherPrinters() => Promise<{ printers: Array<{ modelName: string; ipAddress: string; }>; }>
+getBrotherPrinters() => Promise<{ printers: Array<{ modelName: string; ipAddress: string; printerModel: string; }>; }>
 ```
 
-**Returns:** <code>Promise&lt;{ printers: { modelName: string; ipAddress: string; }[]; }&gt;</code>
+**Returns:** <code>Promise&lt;{ printers: { modelName: string; ipAddress: string; printerModel: string; }[]; }&gt;</code>
 
 --------------------
 
 
-### getPrinters()
+### cancelPrinterSearch()
 
 ```typescript
-getPrinters() => Promise<{ selectedPrinter: { name: string; url: string; make: string; ipAddress: string; }; }>
+cancelPrinterSearch() => Promise<void>
 ```
-
-**Returns:** <code>Promise&lt;{ selectedPrinter: { name: string; url: string; make: string; ipAddress: string; }; }&gt;</code>
 
 --------------------
 
@@ -48,14 +47,23 @@ getPrinters() => Promise<{ selectedPrinter: { name: string; url: string; make: s
 ### printLabel(...)
 
 ```typescript
-printLabel(options: { ipAddress: string; modelName: string; text: string; }) => Promise<{ success: boolean; }>
+printLabel(options: { ipAddress: string; imageUrl: string; }) => Promise<{ success: boolean; }>
 ```
 
-| Param         | Type                                                                 |
-| ------------- | -------------------------------------------------------------------- |
-| **`options`** | <code>{ ipAddress: string; modelName: string; text: string; }</code> |
+| Param         | Type                                                  |
+| ------------- | ----------------------------------------------------- |
+| **`options`** | <code>{ ipAddress: string; imageUrl: string; }</code> |
 
 **Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
+
+--------------------
+
+
+### cancelPrinting()
+
+```typescript
+cancelPrinting() => Promise<void>
+```
 
 --------------------
 
