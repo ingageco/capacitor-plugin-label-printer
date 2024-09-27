@@ -12,7 +12,6 @@
         folder
         will be published to npm when using this template, so you can create away!
       </p>
-      <!-- <ion-button @click="getBrotherPrinters()">Find Network Printers</ion-button> -->
 
       <div v-if="printerList.length > 0">
         <ion-list>
@@ -22,6 +21,9 @@
           </ion-item>
         </ion-list>
       </div>
+      <div v-else>
+        <ion-button @click="getBrotherPrinters()">Find Network Printers</ion-button>
+      </div>
       <div v-if="selectedPrinter">
         <div v-if="selectedPrinter">
           <h3>Selected Printer Details:</h3>
@@ -30,6 +32,7 @@
         </div>
         <ion-button @click="getPrinterStatus(selectedPrinter)">Get Printer Status</ion-button>
         <ion-button @click="printLabel(selectedPrinter)">Print Label</ion-button>
+        <ion-button @click="printLabels(selectedPrinter)">Print Labels</ion-button>
 
         <div v-if="selectedPrinterStatus">
           <h3>Printer Status:</h3>
@@ -53,7 +56,9 @@ const selectedPrinterStatus = ref(null);
 
 
 onMounted(async () => {
-  await getBrotherPrinters();
+  setTimeout(async () => {
+    await getBrotherPrinters();
+  }, 2000);
 });
 
 const selectPrinter = async (printer) => {
@@ -89,9 +94,30 @@ const printLabel = async (printer) => {
   try {
     await CapacitorPluginLabelPrinter.printLabel({
       ipAddress: printer.ipAddress,
-      imageUrl: 'https://delivery.churchlabcdn.com/test-label.png'
+      imageUrl: 'https://delivery.churchlabcdn.com/test-label-large.png',
+      labelSize: 'rollW62',
+      autoCut: true
     });
     console.log('Label printed successfully');
+  } catch (error) {
+    console.error('Error printing label:', error);
+  }
+};
+
+
+const printLabels = async (printer) => {
+  console.log('Print Label clicked');
+  try {
+    await CapacitorPluginLabelPrinter.printLabels({
+      ipAddress: printer.ipAddress,
+      imageUrls: [
+        'https://app.sparrowchms.com/labels/abc123.png?type=parent',
+        'https://app.sparrowchms.com/labels/abc123.png'
+      ],
+      labelSize: 'rollW62',
+      autoCut: true
+    });
+    console.log('Labels printed successfully');
   } catch (error) {
     console.error('Error printing label:', error);
   }

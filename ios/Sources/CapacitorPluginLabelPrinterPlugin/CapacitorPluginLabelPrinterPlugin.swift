@@ -49,7 +49,9 @@ public class CapacitorPluginLabelPrinterPlugin: CAPPlugin {
 
     @objc func printLabel(_ call: CAPPluginCall) {
         guard let ipAddress = call.getString("ipAddress"),
-              let imageUrlString = call.getString("imageUrl") else {
+              let imageUrlString = call.getString("imageUrl"),
+              let labelSizeString = call.getString("labelSize"),
+              let autoCut = call.getBool("autoCut") else {
             call.reject("Missing required parameters")
             return
         }
@@ -74,8 +76,15 @@ public class CapacitorPluginLabelPrinterPlugin: CAPPlugin {
             return
         }
 
-        printSettings.labelSize = .rollW62RB
-        printSettings.autoCut = true
+        // Set label size
+        if let labelSize = getLabelSize(from: labelSizeString) {
+            printSettings.labelSize = labelSize
+        } else {
+            call.reject("Invalid label size")
+            return
+        }
+
+        printSettings.autoCut = autoCut
 
         // Initialize PrintImageFacade if not already done
         if printImageFacade == nil {
@@ -113,5 +122,73 @@ public class CapacitorPluginLabelPrinterPlugin: CAPPlugin {
         }
     }
     
-    
+    @objc func printLabels(_ call: CAPPluginCall) {
+        guard let ipAddress = call.getString("ipAddress"),
+              let imageUrlStrings = call.getArray("imageUrls", String.self),
+              let labelSizeString = call.getString("labelSize"),
+              let autoCut = call.getBool("autoCut") else {
+            call.reject("Missing required parameters")
+            return
+        }
+
+        print("ipAddress: \(ipAddress)")
+        print("imageUrlStrings: \(imageUrlStrings)")
+
+        let imageUrls = imageUrlStrings.compactMap { URL(string: $0) }
+        
+        if imageUrls.count != imageUrlStrings.count {
+            call.reject("One or more invalid image URLs")
+            return
+        }
+
+        print("imageUrls: \(imageUrls)")
+
+        // Create printer info
+        let printerInfo = WiFiPrinterInfo()
+        printerInfo.ipv4Address = ipAddress
+
+        // Create print settings
+        guard let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_810W) else {
+            call.reject("Failed to create print settings")
+            return
+        }
+
+        // Set label size
+        if let labelSize = getLabelSize(from: labelSizeString) {
+            printSettings.labelSize = labelSize
+        } else {
+            call.reject("Invalid label size")
+            return
+        }
+
+        printSettings.autoCut = autoCut
+
+        // Initialize PrintImageFacade if not already done
+        if printImageFacade == nil {
+            printImageFacade = PrintImageFacade()
+        }
+
+        // Print the images
+        let result = printImageFacade?.printImageWithURLs(info: printerInfo, urls: imageUrls, settings: printSettings)
+
+        if let errorMessage = result, !errorMessage.isEmpty {
+            call.reject("Print failed: \(errorMessage)")
+        } else {
+            call.resolve(["success": true])
+        }
+    }
+
+    private func getLabelSize(from string: String) -> BRLMQLPrintSettingsLabelSize? {
+        switch string {
+        case "rollW62":
+            return .rollW62
+        case "rollW29":
+            return .rollW29
+        // Add more cases as needed
+        default:
+            return nil
+        }
+    }
+
+
 }

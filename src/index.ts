@@ -9,7 +9,18 @@ export interface CapacitorPluginLabelPrinterPlugin {
     }>
   }>;
   cancelPrinterSearch(): Promise<void>;
-  printLabel(ipAddress: string, imageUrl: string): Promise<{ success: boolean }>;
+  printLabel(options: {
+    ipAddress: string;
+    imageUrl: string;
+    labelSize: string;
+    autoCut: boolean;
+  }): Promise<{ success: boolean }>;
+  printLabels(options: {
+    ipAddress: string;
+    imageUrls: string[];
+    labelSize: string;
+    autoCut: boolean;
+  }): Promise<{ success: boolean }>;
   cancelPrinting(): Promise<void>;
   getPrinterStatus(ipAddress: string): Promise<{ status: string }>;
 }

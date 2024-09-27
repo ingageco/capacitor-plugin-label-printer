@@ -63,20 +63,18 @@ class PrintImageFacade {
         
         print("Attempting to print image from URL: \(url.absoluteString)")
         
-        let imageData: Data
+        var imageData: Data
         do {
-            if url.isFileURL {
-                // It's a local file
-                imageData = try Data(contentsOf: url)
-                print("Successfully read local file data")
-            } else {
-                // It's a remote URL
-                imageData = try Data(contentsOf: url)
-                print("Successfully downloaded remote image data")
+            let (data, response) = try URLSession.shared.syncFetch(from: url)
+            guard let mimeType = response.mimeType, mimeType.hasPrefix("image") else {
+                print("Invalid MIME type: \(response.mimeType ?? "unknown")")
+                return NSLocalizedString("invalid_image_mime_type", comment: "")
             }
+            imageData = data
+            print("Successfully fetched image data")
         } catch {
-            print("Error reading/downloading image data: \(error.localizedDescription)")
-            return NSLocalizedString("failed_to_read_image_data", comment: "")
+            print("Error fetching image data: \(error.localizedDescription)")
+            return NSLocalizedString("failed_to_fetch_image_data", comment: "")
         }
         
         // Create a UIImage from the data
@@ -116,7 +114,50 @@ class PrintImageFacade {
         cancelRoutine = {
             driver?.cancelPrinting()
         }
-        let printError = driver?.printImage(with: urls, settings: printSettings)
+        
+        var images: [CGImage] = []
+        
+        for url in urls {
+            print("Processing URL: \(url.absoluteString)")
+            
+            var imageData: Data
+            do {
+                let (data, response) = try URLSession.shared.syncFetch(from: url)
+                guard let mimeType = response.mimeType, mimeType.hasPrefix("image") else {
+                    print("Invalid MIME type: \(response.mimeType ?? "unknown")")
+                    continue // Skip this URL and move to the next one
+                }
+                imageData = data
+                print("Successfully fetched image data")
+            } catch {
+                print("Error fetching image data: \(error.localizedDescription)")
+                continue // Skip this URL and move to the next one
+            }
+            
+            // Create a UIImage from the data
+            guard let image = UIImage(data: imageData), let cgImage = image.cgImage else {
+                print("Failed to create UIImage from data")
+                continue // Skip this URL and move to the next one
+            }
+            
+            print("Successfully created UIImage")
+            images.append(cgImage)
+        }
+        
+        if images.isEmpty {
+            return NSLocalizedString("no_valid_images", comment: "")
+        }
+        
+        // Print the images
+        var printError: BRLMPrintError?
+        for cgImage in images {
+            let error = driver?.printImage(with: cgImage, settings: printSettings)
+            if let error = error {
+                printError = error
+                // break // Stop printing if there's an error
+            }
+        }
+        
         driver?.closeChannel()
         cancelRoutine = nil
         return PrintErrorModel.fetchPrintErrorCode(error: printError?.code) + "\n\n" +
@@ -208,5 +249,31 @@ class PrintImageFacade {
             }
             self.cancelRoutine = nil
         }
+    }
+}
+
+extension URLSession {
+    func syncFetch(from url: URL) throws -> (Data, URLResponse) {
+        var data: Data?
+        var response: URLResponse?
+        var error: Error?
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let task = self.dataTask(with: url) { (d, r, e) in
+            data = d
+            response = r
+            error = e
+            semaphore.signal()
+        }
+        
+        task.resume()
+        semaphore.wait()
+        
+        if let error = error {
+            throw error
+        }
+        
+        return (data!, response!)
     }
 }

@@ -16,6 +16,7 @@ npx cap sync
 * [`getBrotherPrinters()`](#getbrotherprinters)
 * [`cancelPrinterSearch()`](#cancelprintersearch)
 * [`printLabel(...)`](#printlabel)
+* [`printLabels(...)`](#printlabels)
 * [`cancelPrinting()`](#cancelprinting)
 * [`getPrinterStatus(...)`](#getprinterstatus)
 * [Interfaces](#interfaces)
@@ -55,6 +56,22 @@ printLabel(ipAddress: string, imageUrl: string) => Promise<{ success: boolean; }
 | --------------- | ------------------- |
 | **`ipAddress`** | <code>string</code> |
 | **`imageUrl`**  | <code>string</code> |
+
+**Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
+
+--------------------
+
+
+### printLabels(...)
+
+```typescript
+printLabels(ipAddress: string, imageUrls: string[]) => Promise<{ success: boolean; }>
+```
+
+| Param           | Type                  |
+| --------------- | --------------------- |
+| **`ipAddress`** | <code>string</code>   |
+| **`imageUrls`** | <code>string[]</code> |
 
 **Returns:** <code>Promise&lt;{ success: boolean; }&gt;</code>
 
